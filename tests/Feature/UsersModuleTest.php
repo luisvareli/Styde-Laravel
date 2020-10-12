@@ -86,6 +86,27 @@ class UsersModuleTest extends TestCase
             'email'=>'luis@styde.net',
             'password' => '123',
         ]);
+
+    }
+
+    /** @test */
+
+    function the_name_is_required(){
+
+        $this->from('usuarios/nuevo')
+            ->post('/usuarios/',[
+            'name'=>'',
+            'email'=>'luis@styde.net',
+            'password'=>'123'
+        ])
+            ->assertRedirect('usuarios/nuevo')
+            ->assertSessionHasErrors(['name' => 'El campo nombre es obligatorio']);
+
+        $this->assertEquals(0, User::count());
+
+//        $this->assertDatabaseMissing('users',[
+//            'email' => 'luis@styde.net',
+//        ]);
     }
 
 }
