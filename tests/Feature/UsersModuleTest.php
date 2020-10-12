@@ -67,7 +67,7 @@ class UsersModuleTest extends TestCase
 
         $this->get('/usuarios/nuevo')
             ->assertStatus(200)
-            ->assertSee('Crear nuevo usuario');
+            ->assertSee('Crear usuario');
     }
 
     /** @test */
@@ -104,9 +104,102 @@ class UsersModuleTest extends TestCase
 
         $this->assertEquals(0, User::count());
 
-//        $this->assertDatabaseMissing('users',[
-//            'email' => 'luis@styde.net',
-//        ]);
     }
+
+    /** @test */
+
+    function the_email_is_required(){
+
+
+        $this->from('usuarios/nuevo')
+            ->post('/usuarios/',[
+                'name'=>'Luis',
+                'email'=>'',
+                'password'=>'123'
+            ])
+            ->assertRedirect('usuarios/nuevo')
+            ->assertSessionHasErrors(['email']);
+
+        $this->assertEquals(0, User::count());
+
+    }
+
+    /** @test */
+
+    function the_email_must_be_valid(){
+
+
+        $this->from('usuarios/nuevo')
+            ->post('/usuarios/',[
+                'name'=>'Luis',
+                'email'=>'correo-no-valido',
+                'password'=>'123'
+            ])
+            ->assertRedirect('usuarios/nuevo')
+            ->assertSessionHasErrors(['email']);
+
+        $this->assertEquals(0, User::count());
+
+    }
+
+    /** @test */
+
+    function the_email_must_be_unique(){
+
+        factory(User::class)->create([
+            'email'=>'luis@styde.net'
+        ]);
+
+
+        $this->from('usuarios/nuevo')
+            ->post('/usuarios/',[
+                'name'=>'Luis',
+                'email'=>'correo-no-valido',
+                'password'=>'123'
+            ])
+            ->assertRedirect('usuarios/nuevo')
+            ->assertSessionHasErrors(['email']);
+
+        $this->assertEquals(1, User::count());
+
+    }
+
+    /** @test */
+
+    function the_password_is_required(){
+
+
+        $this->from('usuarios/nuevo')
+            ->post('/usuarios/',[
+                'name'=>'Luis',
+                'email'=>'luis@styde.net',
+                'password'=>''
+            ])
+            ->assertRedirect('usuarios/nuevo')
+            ->assertSessionHasErrors(['password']);
+
+        $this->assertEquals(0, User::count());
+
+    }
+
+    /** @test */
+
+    function the_password_long_required(){
+
+
+        $this->from('usuarios/nuevo')
+            ->post('/usuarios/',[
+                'name'=>'Luis',
+                'email'=>'luis@styde.net',
+                'password'=>'',min(6)
+            ])
+            ->assertRedirect('usuarios/nuevo')
+            ->assertSessionHasErrors(['password']);
+
+        $this->assertEquals(0, User::count());
+
+    }
+
+
 
 }
