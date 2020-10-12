@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Profession;
 use Illuminate\Database\Seeder;
 USE Illuminate\Support\Facades\DB;
@@ -33,5 +32,7 @@ class ProfessionSeeder extends Seeder
         Profession::create([
             'title'=> 'Disenador Web',
         ]);
+
+        factory(App\Profession::class, 17)->create();
     }
 }
