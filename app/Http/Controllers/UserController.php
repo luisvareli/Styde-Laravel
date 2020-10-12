@@ -21,22 +21,37 @@ class UserController extends Controller
         return view('users.index', compact('title','users'));
     }
 
-    public function show($id)
+    public function show(User $user)
     {
-        $user = User::findOrFail($id);
 
-        //exit('Linea no alcanzada'); //test
-//        if($user == null){
-//            return response()->view('errors.404',[],404);
-//        }
+
+//        $user = User::findOrFail($id);
+//
+//        //exit('Linea no alcanzada'); //test
+////        if($user == null){
+////            return response()->view('errors.404',[],404);
+////        }
 
         return view('users.show',compact('user'));
 
     }
     public function create(){
-        return 'Crear nuevo usuario';
+        return view('users.create');
 
     }
 
+    public function store()
+    {
+        $data = request()->all();
+
+
+        User::create([
+            'name'=>$data['name'],
+            'email'=>$data['email'],
+            'password'=>bcrypt($data['password'])
+        ]);
+
+        return redirect()->route('users.index');
+    }
 
 }
