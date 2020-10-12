@@ -21,9 +21,14 @@ class UserController extends Controller
         return view('users.index', compact('title','users'));
     }
 
-    public function show($id){
-        $user = User::find($id);
+    public function show($id)
+    {
+        $user = User::findOrFail($id);
 
+        //exit('Linea no alcanzada'); //test
+//        if($user == null){
+//            return response()->view('errors.404',[],404);
+//        }
 
         return view('users.show',compact('user'));
 
