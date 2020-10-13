@@ -74,7 +74,6 @@ class UsersModuleTest extends TestCase
     /** @test */
     function it_creates_a_new_user(){
 
-        $this->withoutExceptionHandling();
 
         $this->post('/usuarios/',[
             'name'=>'Luis',
@@ -97,10 +96,10 @@ class UsersModuleTest extends TestCase
 
         $this->from('usuarios/nuevo')
             ->post('/usuarios/',[
-            'name'=>'',
-            'email'=>'luis@styde.net',
-            'password'=>'123'
-        ])
+                'name'=>'',
+                'email'=>'luis@styde.net',
+                'password'=>'123'
+            ])
             ->assertRedirect('usuarios/nuevo')
             ->assertSessionHasErrors(['name' => 'El campo nombre es obligatorio']);
 
@@ -193,7 +192,7 @@ class UsersModuleTest extends TestCase
             ->post('/usuarios/',[
                 'name'=>'Luis',
                 'email'=>'luis@styde.net',
-                'password'=>'',min(6)
+                'password'=>'',min([6])
             ])
             ->assertRedirect('usuarios/nuevo')
             ->assertSessionHasErrors(['password']);
@@ -214,7 +213,7 @@ class UsersModuleTest extends TestCase
             ->assertViewIs('users.edit')
             ->assertSee('Editar usuario')
             ->assertViewHas('user', function ($viewUser) use ($user){
-                return $viewUser->id===$user->id;
+                return $viewUser->id === $user->id;
         });
     }
 
@@ -235,6 +234,95 @@ class UsersModuleTest extends TestCase
             'name'=>'Luis',
             'email'=>'luis@styde.net',
             'password' => '123',
+        ]);
+    }
+
+        /** @test */
+        function the_name_is_required_when_updating_the_user()
+        {
+            $user=factory(User::class)->create();
+
+            $this->from("usuarios/{$user->id}/editar")
+                ->put("usuarios/{$user->id}",[
+                'name'=>'',
+                'email'=>'luis@styde.net',
+                'password'=>'123'
+                ])
+                ->assertRedirect("usuarios/{$user->id}/editar")
+                ->assertSessionHasErrors(['name']);
+
+            $this->assertDatabaseMissing('users',['email' => 'luis@styde.net']);
+
+
+        }
+
+    /** @test */
+
+    function the_email_must_be_valid_when_updating_the_user(){
+
+        $user=factory(User::class)->create();
+
+        $this->from("usuarios/{$user->id}/editar")
+            ->put("usuarios/{$user->id}",[
+                'name'=>'Luis Vargas',
+                'email'=>'corre-no-valido',
+                'password'=>'123'
+            ])
+            ->assertRedirect("usuarios/{$user->id}/editar")
+            ->assertSessionHasErrors(['email']);
+
+        $this->assertDatabaseMissing('users',['name' => 'Luis Vargas']);
+
+    }
+
+    /** @test */
+
+    function the_email_must_be_unique_when_updating_the_user(){
+
+        self::markTestIncomplete();
+        return;
+
+        $user = factory(User::class)->create([
+            'email'=>'luis@styde.net'
+        ]);
+
+
+        $this->from("usuarios/{$user->id}/editar")
+            ->put("usuarios/{$user->id}", [
+                'name'=>'Luis',
+                'email'=>'luis@styde.net',
+                'password'=>'123'
+            ])
+            ->assertRedirect('usuarios/nuevo')
+            ->assertSessionHasErrors(['email']);
+
+        $this->assertEquals(1, User::count());
+
+    }
+
+    /** @test */
+
+    function the_password_is_optional_when_updating_the_user(){
+
+        $oldPassword = 'CLAVE_ANTERIOR';
+
+        $user = factory(User::class)->create([
+            'password'=>bcrypt($oldPassword)
+        ]);
+
+
+        $this->from("usuarios/{$user->id}/editar")
+            ->put("usuarios/{$user->id}", [
+                'name' =>'Luis',
+                'email' =>'luis@styde.net',
+                'password' => ''
+            ])
+            ->assertRedirect("usuarios/{$user->id}");
+
+        $this->assertCredentials([
+            'name'=>'Luis',
+            'email'=>'luis@styde.net',
+            'password'=>$oldPassword
         ]);
 
     }
