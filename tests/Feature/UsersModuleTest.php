@@ -46,7 +46,7 @@ class UsersModuleTest extends TestCase
             'name' => 'Luis Vargas'
         ]);
 
-        $this->get('/usuarios/'. $user->id) //usuarios/5
+        $this->get("/usuarios/{$user->id}") //usuarios/5
             ->assertStatus(200)
             ->assertSee('Luis Vargas');
     }
@@ -70,6 +70,7 @@ class UsersModuleTest extends TestCase
             ->assertSee('Crear usuario');
     }
 
+
     /** @test */
     function it_creates_a_new_user(){
 
@@ -88,6 +89,7 @@ class UsersModuleTest extends TestCase
         ]);
 
     }
+
 
     /** @test */
 
@@ -216,6 +218,25 @@ class UsersModuleTest extends TestCase
         });
     }
 
+    /** @test */
+    function it_updates_a_user(){
 
+        $user = factory(User::class)->create();
+
+        $this->withoutExceptionHandling();
+
+        $this->put("/usuarios/{$user->id}",[
+            'name'=>'Luis',
+            'email'=>'luis@styde.net',
+            'password'=>'123'
+        ])->assertRedirect("/usuarios/{$user->id}");
+
+        $this->assertCredentials([
+            'name'=>'Luis',
+            'email'=>'luis@styde.net',
+            'password' => '123',
+        ]);
+
+    }
 
 }
