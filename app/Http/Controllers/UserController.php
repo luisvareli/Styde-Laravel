@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -48,8 +49,8 @@ class UserController extends Controller
             'name'=>'required',
             'email'=>['required', 'email','unique:users,email'],
             'password'=>['required','string']
-    ],[
-        'name.required'=>'El campo nombre es obligatorio'
+        ],[
+            'name.required'=>'El campo nombre es obligatorio'
         ]);
 
 
@@ -64,7 +65,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-       return view('users.edit',['user'=>$user]);
+        return view('users.edit',['user'=>$user]);
     }
 
     public function update(User $user)
@@ -72,7 +73,10 @@ class UserController extends Controller
 
         $data = request()->validate([
             'name' => 'required',
-            'email' => 'required|email',
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users')->ignore($user->id)],
             'password' => '',
         ]);
 
