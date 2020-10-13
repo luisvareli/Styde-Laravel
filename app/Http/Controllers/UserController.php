@@ -19,24 +19,18 @@ class UserController extends Controller
 //            ->with('users', User::all())
 //            ->with('title','Listado de usuarios');
 
-        return view('users.index', compact('title','users'));
+        return view('users.index', compact('title', 'users'));
     }
 
     public function show(User $user)
     {
 
-
-//        $user = User::findOrFail($id);
-//
-//        //exit('Linea no alcanzada'); //test
-////        if($user == null){
-////            return response()->view('errors.404',[],404);
-////        }
-
-        return view('users.show',compact('user'));
+        return view('users.show', compact('user'));
 
     }
-    public function create(){
+
+    public function create()
+    {
         return view('users.create');
 
     }
@@ -46,18 +40,18 @@ class UserController extends Controller
 
 
         $data = request()->validate([
-            'name'=>'required',
-            'email'=>['required', 'email','unique:users,email'],
-            'password'=>['required','string']
-        ],[
-            'name.required'=>'El campo nombre es obligatorio'
+            'name' => 'required',
+            'email' => ['required', 'email', 'unique:users,email'],
+            'password' => ['required', 'string']
+        ], [
+            'name.required' => 'El campo nombre es obligatorio'
         ]);
 
 
         User::create([
-            'name'=>$data['name'],
-            'email'=>$data['email'],
-            'password'=>bcrypt($data['password'])
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password'])
         ]);
 
         return redirect()->route('users.index');
@@ -65,7 +59,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        return view('users.edit',['user'=>$user]);
+        return view('users.edit', ['user' => $user]);
     }
 
     public function update(User $user)
@@ -81,7 +75,7 @@ class UserController extends Controller
         ]);
 
 
-        if($data['password']!=null) {
+        if ($data['password'] != null) {
             $data['password'] = bcrypt($data['password']);
         } else {
             unset($data['password']);
@@ -89,7 +83,12 @@ class UserController extends Controller
 
         $user->update($data);
 
-        return redirect()->route('users.show', ['user'=>$user]);
+        return redirect()->route('users.show', ['user' => $user]);
     }
 
+    function destroy(User $user)
+    {
+        $user->delete();
+        return redirect()->route('users.index');
+    }
 }

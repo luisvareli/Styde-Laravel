@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
-USE \Illuminate\Support\Facades\DB;
+use \Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
     {
         DB::statement('SET FOREIGN_KEY_CHECKS =0;');
 
-        foreach ($tables as $table){
+        foreach ($tables as $table) {
             DB::table($table)->truncate();
         }
 

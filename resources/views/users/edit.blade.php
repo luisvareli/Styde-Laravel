@@ -24,16 +24,17 @@
 
 
         <label for="name">Nombre:</label>
-        <input  type="text" name="name" id="name" placeholder="Pedro Perez" value="{{old('name', $user->name)}}">
+        <input type="text" name="name" id="name" placeholder="Pedro Perez" value="{{old('name', $user->name)}}">
 
         <br>
 
         <label for="email">Correo electronico:</label>
-        <input  type="email" name="email" id="email" placeholder="pedro@example.com" value="{{old('email', $user->email)}}">
+        <input type="email" name="email" id="email" placeholder="pedro@example.com"
+               value="{{old('email', $user->email)}}">
         <br>
 
         <label for="password">Contraseña:</label>
-        <input  type="password" name="password" id="password" placeholder="The password must be at least 6 characters">
+        <input type="password" name="password" id="password" placeholder="The password must be at least 6 characters">
         @if($errors->has('password'))
             <p>{{ $errors->first('password') }}</p>
         @endif

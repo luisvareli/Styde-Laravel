@@ -18,12 +18,14 @@ Route::get('/usuarios/{user}', 'UserController@show')
 
 Route::get('/usuarios/nuevo', 'UserController@create')->name('users.create');
 
-Route::post('/usuarios','UserController@store');
+Route::post('/usuarios', 'UserController@store');
 
-Route::get('/usuarios/{user}/editar','UserController@edit')->name('users.edit');
+Route::get('/usuarios/{user}/editar', 'UserController@edit')->name('users.edit');
 
 //Route::get('/usuarios/{id}/editar','UserController@edit')->name('users.edit');
 
-Route::put('/usuarios/{user}','UserController@update');
+Route::put('/usuarios/{user}', 'UserController@update');
 
 Route::get('/saludo/{name}/{nickname?}', 'WelcomeUserController');
+
+Route::delete('/usuarios/{user}', 'UserController@destroy')->name('users.destroy');

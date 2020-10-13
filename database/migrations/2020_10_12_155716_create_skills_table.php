@@ -17,7 +17,6 @@ class CreateSkillsTable extends Migration
             $table->increments('id');
 
 
-
             $table->timestamps();
         });
     }

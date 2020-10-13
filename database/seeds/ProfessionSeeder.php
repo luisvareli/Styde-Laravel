@@ -2,7 +2,7 @@
 
 use App\Profession;
 use Illuminate\Database\Seeder;
-USE Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB;
 
 class ProfessionSeeder extends Seeder
 {
@@ -22,15 +22,15 @@ class ProfessionSeeder extends Seeder
 //        ]);
 
         Profession::create([
-            'title'=>'Desarrollador back-end',
+            'title' => 'Desarrollador back-end',
         ]);
 
         Profession::create([
-            'title'=> 'Desarrollador front-end',
+            'title' => 'Desarrollador front-end',
         ]);
 
         Profession::create([
-            'title'=> 'Disenador Web',
+            'title' => 'Disenador Web',
         ]);
 
         factory(App\Profession::class, 17)->create();

@@ -20,20 +20,16 @@
     <form method="POST" action="{{ url('usuarios') }}">
         {{csrf_field()}}
 
-
         <label for="name">Nombre:</label>
-        <input  type="text" name="name" id="name" placeholder="Pedro Perez" value="{{old('name')}}">
-        @if($errors->has('name'))
-            <p>{{ $errors->first('name') }}</p>
-        @endif
+        <input type="text" name="name" id="name" placeholder="Pedro Perez" value="{{old('name')}}">
         <br>
 
         <label for="email">Correo electronico:</label>
-        <input  type="email" name="email" id="email" placeholder="pedro@example.com" value="{{old('email')}}">
+        <input type="email" name="email" id="email" placeholder="pedro@example.com" value="{{old('email')}}">
         <br>
 
         <label for="password">Contraseña:</label>
-        <input  type="password" name="password" id="password" placeholder="The password must be at least 6 characters">
+        <input type="password" name="password" id="password" placeholder="The password must be at least 6 characters">
         @if($errors->has('password'))
             <p>{{ $errors->first('password') }}</p>
         @endif
